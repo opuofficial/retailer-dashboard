@@ -1,15 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import GhorBari_Logo from "../../assets/Ghorbari_Logo.svg";
 import BSRM_Logo from "../../assets/BSRM_Logo.svg";
+import BounceLoader from "react-spinners/BounceLoader";
 
 const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  const handleLoginButtonClick = (e) => {
+    e.preventDefault();
+
+    setLoginLoading(true);
+
+    setTimeout(() => {
+      setLoginLoading(false);
+    }, 2000);
+  };
+
   return (
     <section id="login-section">
       <div className="border h-screen flex items-center justify-center bg-[#f7f9fc] bg-shadow-image bg-no-repeat bg-right-bottom">
         <div className="form-container flex-1 max-w-sm">
           <form className="bg-white p-5 rounded-xl">
             <div className="flex justify-center mt-3 mb-10">
-              <img src={GhorBari_Logo} alt="" />
+              <img src={GhorBari_Logo} alt="Ghorbari Logo" />
             </div>
             <div className="">
               <label htmlFor="email" className="font-semibold">
@@ -20,7 +34,7 @@ const Login = () => {
                   <i class="fa-regular fa-envelope"></i>
                 </span>
                 <input
-                  type="text"
+                  type="email"
                   className="w-full outline-none p-2"
                   id="email"
                   autoComplete="off"
@@ -38,30 +52,65 @@ const Login = () => {
                   <i class="fa-solid fa-key"></i>
                 </span>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   className="w-full outline-none p-2"
                   id="password"
                   placeholder="******"
                 />
-                <span className="">
-                  <i class="fa-regular fa-eye"></i>
+                <span
+                  className="cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <i class="fa-regular fa-eye-slash"></i>
+                  ) : (
+                    <i class="fa-regular fa-eye"></i>
+                  )}
                 </span>
               </div>
             </div>
 
-            <button className="text-lg bg-primary text-white font-semibold w-full py-2 rounded-md mt-4">
-              Log in
+            <button
+              onClick={handleLoginButtonClick}
+              className="text-lg bg-primary text-white font-semibold w-full py-2 rounded-md mt-4"
+              disabled={loginLoading}
+            >
+              <span>
+                {loginLoading ? (
+                  <div className="flex justify-center items-center gap-2">
+                    <BounceLoader
+                      color={"#fff"}
+                      cssOverride={{
+                        borderColor: "#fff",
+                      }}
+                      size={20}
+                    />
+                    <span>Loading...</span>
+                  </div>
+                ) : (
+                  "Log in"
+                )}
+              </span>
             </button>
 
-            <div className="flex justify-between mt-4">
+            <div className="flex justify-between items-center mt-4">
               <div className="flex gap-1.5">
-                <input type="checkbox" id="remember_me" />
-                <label htmlFor="remember_me" className="font-semibold">
+                <input
+                  type="checkbox"
+                  className="cursor-pointer"
+                  id="remember_me"
+                />
+                <label
+                  htmlFor="remember_me"
+                  className="font-semibold  cursor-pointer"
+                >
                   Remember me
                 </label>
               </div>
 
-              <div className="text-slate-600">Forgot password?</div>
+              <div className="text-slate-600 text-sm cursor-pointer">
+                Forgot password?
+              </div>
             </div>
           </form>
         </div>
