@@ -3,3 +3,17 @@
 /* ::-webkit-scrollbar {
     width: 0px;
 } */
+
+:where(.css-dev-only-do-not-override-1sl8jbg).ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover, :where(.css-dev-only-do-not-override-1sl8jbg).ant-menu-light>.ant-menu:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover {
+    background: transparent;
+    color: #07bfa5;
+}
+
+:where(.css-dev-only-do-not-override-1sl8jbg).ant-menu-light:not(.ant-menu-horizontal) .ant-menu-submenu-title:hover, :where(.css-dev-only-do-not-override-1sl8jbg).ant-menu-light>.ant-menu:not(.ant-menu-horizontal) .ant-menu-submenu-title:hover {
+    background: transparent;
+    color: #07bfa5;
+}
+
+:where(.css-dev-only-do-not-override-1sl8jbg).ant-menu-light.ant-menu-inline .ant-menu-sub.ant-menu-inline, :where(.css-dev-only-do-not-override-1sl8jbg).ant-menu-light>.ant-menu.ant-menu-inline .ant-menu-sub.ant-menu-inline {
+    background: transparent;
+}
