@@ -9,7 +9,7 @@ const { RangePicker } = DatePicker;
 const Dashboard = () => {
   return (
     <section>
-      <div className="heading flex items-center justify-between">
+      <div className="heading flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div className="text-2xl font-semibold">Dashboard</div>
         <div className="flex gap-3">
           <div>

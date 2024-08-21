@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Button, Layout, Menu, theme } from "antd";
 import {
@@ -18,6 +18,7 @@ import GhorBari_Logo from "../assets/Ghorbari_Logo.svg";
 import G_Logo from "../assets/G.svg";
 import BSRM_Logo from "../assets/BSRM_Logo.svg";
 import BSRM_Icon from "../assets/bsrm_icon.svg";
+import { Dropdown, Avatar } from "antd";
 
 const sidebarItems = [
   {
@@ -64,11 +65,45 @@ const sidebarItems = [
   },
 ];
 
+const items = [
+  {
+    key: "1",
+    label: "Profile",
+  },
+  {
+    key: "2",
+    label: "Logout",
+  },
+];
+
 const BaseLayout = () => {
   const [collapsed, setCollapsed] = useState(window.innerWidth < 1250);
+  const [language, setLanguage] = useState("eng");
+  const [showNotification, setShowNotification] = useState(false);
+  const notificationBoxRef = useRef();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const handleNotificationIconClick = () => {
+    setShowNotification(!showNotification);
+  };
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (
+        showNotification &&
+        notificationBoxRef.current &&
+        !notificationBoxRef.current.contains(e.target)
+      ) {
+        setShowNotification(false);
+      }
+    };
+
+    window.addEventListener("click", handleOutsideClick);
+
+    return () => window.removeEventListener("click", handleOutsideClick);
+  }, [showNotification]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -80,6 +115,10 @@ const BaseLayout = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const changeLanguage = (lang) => {
+    setLanguage(lang);
+  };
 
   return (
     <div>
@@ -132,21 +171,69 @@ const BaseLayout = () => {
           </div>
         </Sider>
         <Layout className="bg-[#f9fafb]">
-          <Header
-            style={{
-              padding: 0,
-              background: colorBgContainer,
-            }}
-          >
+          <Header className="flex justify-between items-center bg-white shadow-sm py-8">
             <Button
               type="text"
               icon={<FontAwesomeIcon icon={faBars} />}
               onClick={() => setCollapsed(!collapsed)}
               style={{
                 fontSize: "1.3rem",
-                marginLeft: "2rem",
               }}
             />
+
+            {/* Language Button Group */}
+            <div className="pr-6 flex items-center gap-6">
+              <div className="cursor-pointer border-2 border-solid border-primary flex rounded-full overflow-hidden">
+                <Button
+                  style={{ borderRadius: 0, border: 0, fontWeight: "bold" }}
+                  className={language == "bn" ? "bg-primary text-white" : ""}
+                  onClick={() => changeLanguage("bn")}
+                >
+                  বাং
+                </Button>
+                <Button
+                  style={{ borderRadius: 0, border: 0, fontWeight: "bold" }}
+                  className={language == "eng" ? "bg-primary text-white" : ""}
+                  onClick={() => changeLanguage("eng")}
+                >
+                  Eng
+                </Button>
+              </div>
+
+              {/* Notification section */}
+              <div className="relative pt-2" ref={notificationBoxRef}>
+                <FontAwesomeIcon
+                  className="text-xl cursor-pointer"
+                  icon={faBell}
+                  onClick={handleNotificationIconClick}
+                />
+                <div
+                  className={`h-36 w-56 absolute z-10 bg-white shadow top-[100%] right-0 p-3 ${
+                    !showNotification ? "hidden" : ""
+                  }`}
+                >
+                  <div className="flex justify-between text-xs pb-3 border-b">
+                    <div>Notifications</div>
+                    <div>View All</div>
+                  </div>
+
+                  <div className="text-center font-semibold text-lg mt-5">
+                    No Data
+                  </div>
+                </div>
+              </div>
+
+              <Dropdown
+                menu={{
+                  items,
+                }}
+                placement="bottomRight"
+                className="cursor-pointer"
+                arrow
+              >
+                <Avatar size="large" icon="R" alt="Rohman" />
+              </Dropdown>
+            </div>
           </Header>
           <Content className="p-6">
             <Outlet />
