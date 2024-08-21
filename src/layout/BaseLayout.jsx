@@ -7,6 +7,7 @@ import {
   faBell,
   faCartShopping,
   faFile,
+  faGauge,
   faGear,
   faMessage,
   faTableCellsLarge,
@@ -21,7 +22,7 @@ import BSRM_Icon from "../assets/bsrm_icon.svg";
 const sidebarItems = [
   {
     key: "dashboard",
-    icon: <FontAwesomeIcon icon={faTableCellsLarge} />,
+    icon: <FontAwesomeIcon icon={faGauge} />,
     label: "Dashboard",
   },
   {
