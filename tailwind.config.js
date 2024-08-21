@@ -5,6 +5,7 @@ export default {
     extend: {
       colors: {
         primary: "#07bfa5",
+        primaryLight: "#f2fff9",
       },
       backgroundImage: {
         "shadow-image": "url('/src/assets/shadow_image.svg')",

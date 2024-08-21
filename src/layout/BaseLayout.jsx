@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Button, Layout, Menu, theme } from "antd";
 import {
@@ -64,10 +64,21 @@ const sidebarItems = [
 ];
 
 const BaseLayout = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(window.innerWidth < 1250);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setCollapsed(window.innerWidth < 1250);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div>
@@ -98,7 +109,6 @@ const BaseLayout = () => {
             mode="inline"
             defaultSelectedKeys={["dashboard"]}
             items={sidebarItems}
-            // style={{ padding: "0 1.5rem" }}
             className={collapsed ? "p-2" : "p-6"}
           />
           <div
@@ -120,7 +130,7 @@ const BaseLayout = () => {
             )}
           </div>
         </Sider>
-        <Layout>
+        <Layout className="bg-[#f9fafb]">
           <Header
             style={{
               padding: 0,
@@ -137,14 +147,7 @@ const BaseLayout = () => {
               }}
             />
           </Header>
-          <Content
-            style={{
-              margin: "24px 16px",
-              padding: 24,
-              minHeight: 280,
-              background: colorBgContainer,
-            }}
-          >
+          <Content className="p-6">
             <Outlet />
           </Content>
         </Layout>
