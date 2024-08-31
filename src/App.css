@@ -22,3 +22,7 @@
     background: #07bfa5 !important;
     color: white !important;
 }
+
+.apexcharts-toolbar {
+    display: none !important;
+}

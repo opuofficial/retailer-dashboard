@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { DatePicker } from "antd";
 import DashboardCards from "../../components/DashboardCards";
+import CharsSection from "../../components/ChartsSection";
 const { RangePicker } = DatePicker;
 
 const Dashboard = () => {
@@ -25,6 +26,7 @@ const Dashboard = () => {
       </div>
 
       <DashboardCards />
+      <CharsSection />
     </section>
   );
 };
