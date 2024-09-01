@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { Button, Layout, Menu, theme } from "antd";
 import {
   faBars,
@@ -24,7 +24,7 @@ const sidebarItems = [
   {
     key: "dashboard",
     icon: <FontAwesomeIcon icon={faGauge} />,
-    label: "Dashboard",
+    label: <Link to={"/retailer/dashboard"}>Dashboard</Link>,
   },
   {
     key: "manage-products",
@@ -51,17 +51,17 @@ const sidebarItems = [
   {
     key: "live-chat",
     icon: <FontAwesomeIcon icon={faMessage} />,
-    label: "Live Chat",
+    label: <Link to={"/retailer/live-chat"}>Live Chat</Link>,
   },
   {
     key: "notification",
     icon: <FontAwesomeIcon icon={faBell} />,
-    label: "Notification",
+    label: <Link to={"/retailer/notification"}>Notification</Link>,
   },
   {
     key: "settings",
     icon: <FontAwesomeIcon icon={faGear} />,
-    label: "Settings",
+    label: <Link to={"/retailer/settings"}>Settings</Link>,
   },
 ];
 

@@ -5,6 +5,9 @@ import { ConfigProvider } from "antd";
 import Login from "./pages/Login";
 import BaseLayout from "./layout/BaseLayout";
 import Dashboard from "./pages/dashboard";
+import LiveChat from "./pages/live-chat";
+import Notification from "./pages/notification";
+import Settings from "./pages/settings";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +24,19 @@ const router = createBrowserRouter([
           {
             path: "dashboard",
             element: <Dashboard />,
+          },
+
+          {
+            path: "live-chat",
+            element: <LiveChat />,
+          },
+          {
+            path: "notification",
+            element: <Notification />,
+          },
+          {
+            path: "settings",
+            element: <Settings />,
           },
         ],
       },
