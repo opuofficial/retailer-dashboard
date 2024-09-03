@@ -40,8 +40,6 @@ const Notification = () => {
         </div>
       </div>
 
-      {/* notifications */}
-
       <div className="my-5">
         <div className="mb-3 w-4/5 bg-white p-5 mx-auto flex items-center justify-between">
           <div className="flex justify-between items-center">
