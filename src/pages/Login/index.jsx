@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import GhorBari_Logo from "../../assets/Ghorbari_Logo.svg";
 import BSRM_Logo from "../../assets/BSRM_Logo.svg";
 import BounceLoader from "react-spinners/BounceLoader";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleLoginButtonClick = (e) => {
     e.preventDefault();
@@ -14,6 +17,7 @@ const Login = () => {
 
     setTimeout(() => {
       setLoginLoading(false);
+      navigate("/retailer/dashboard");
     }, 2000);
   };
 

@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
 import "./App.css";
 import { ConfigProvider } from "antd";
 
@@ -12,33 +16,32 @@ import Settings from "./pages/settings";
 const router = createBrowserRouter([
   {
     path: "/",
+    loader: () => redirect("/retailer/login"),
+  },
+  {
+    path: "/retailer/login",
+    element: <Login />,
+  },
+  {
+    path: "/retailer",
+    element: <BaseLayout />,
     children: [
       {
-        path: "retailer/login",
-        element: <Login />,
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+
+      {
+        path: "live-chat",
+        element: <LiveChat />,
       },
       {
-        path: "retailer",
-        element: <BaseLayout />,
-        children: [
-          {
-            path: "dashboard",
-            element: <Dashboard />,
-          },
-
-          {
-            path: "live-chat",
-            element: <LiveChat />,
-          },
-          {
-            path: "notification",
-            element: <Notification />,
-          },
-          {
-            path: "settings",
-            element: <Settings />,
-          },
-        ],
+        path: "notification",
+        element: <Notification />,
+      },
+      {
+        path: "settings",
+        element: <Settings />,
       },
     ],
   },
