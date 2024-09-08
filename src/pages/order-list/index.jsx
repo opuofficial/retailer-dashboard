@@ -9,7 +9,7 @@ const dataSource = [
   {
     key: "1",
     no: "1",
-    id: "productId",
+    id: "productId1",
     orderId: "IHB-82",
     date: "04 Sep, 2024",
     customerName: "Humayun Kabir",
@@ -23,7 +23,7 @@ const dataSource = [
   {
     key: "2",
     no: "2",
-    id: "productId",
+    id: "productId2",
     orderId: "IHB-82",
     date: "04 Sep, 2024",
     customerName: "Humayun Kabir",
@@ -37,7 +37,7 @@ const dataSource = [
   {
     key: "3",
     no: "3",
-    id: "productId",
+    id: "productId3",
     orderId: "IHB-82",
     date: "04 Sep, 2024",
     customerName: "Humayun Kabir",
@@ -127,10 +127,12 @@ const columns = [
     key: "action",
     render: (_, record) => {
       return (
-        <FontAwesomeIcon
-          icon={faEye}
-          className="text-slate-400 border border-slate-400 rounded-md p-2 cursor-pointer"
-        />
+        <Link to={`/retailer/report/order-list/order-details/${record.id}`}>
+          <FontAwesomeIcon
+            icon={faEye}
+            className="text-slate-400 border border-slate-400 rounded-md p-2 cursor-pointer"
+          />
+        </Link>
       );
     },
   },

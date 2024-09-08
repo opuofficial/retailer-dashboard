@@ -14,6 +14,7 @@ import Notification from "./pages/notification";
 import Settings from "./pages/settings";
 import ManageOrder from "./pages/manage-order";
 import OrderList from "./pages/order-list";
+import OrderDetails from "./pages/order-details";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
         element: <ManageOrder />,
       },
       {
+        path: "manage-order/order-details/:id",
+        element: <OrderDetails />,
+      },
+      {
         path: "live-chat",
         element: <LiveChat />,
       },
@@ -47,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: "report/order-list",
         element: <OrderList />,
+      },
+      {
+        path: "report/order-list/order-details/:id",
+        element: <OrderDetails />,
       },
       {
         path: "settings",

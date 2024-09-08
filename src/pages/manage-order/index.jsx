@@ -127,10 +127,12 @@ const columns = [
     key: "action",
     render: (_, record) => {
       return (
-        <FontAwesomeIcon
-          icon={faEye}
-          className="text-slate-400 border border-slate-400 rounded-md p-2 cursor-pointer"
-        />
+        <Link to={`/retailer/manage-order/order-details/${record.id}`}>
+          <FontAwesomeIcon
+            icon={faEye}
+            className="text-slate-400 border border-slate-400 rounded-md p-2 cursor-pointer"
+          />
+        </Link>
       );
     },
   },
