@@ -59,6 +59,18 @@ const sidebarItems = [
     label: <Link to={"/retailer/notification"}>Notification</Link>,
   },
   {
+    key: "report",
+    icon: <FontAwesomeIcon icon={faFile} />,
+    label: "Report",
+    children: [
+      {
+        key: "order-list",
+        icon: <FontAwesomeIcon icon={faBarsStaggered} />,
+        label: <Link to={"/retailer/report/order-list"}>Order List</Link>,
+      },
+    ],
+  },
+  {
     key: "settings",
     icon: <FontAwesomeIcon icon={faGear} />,
     label: <Link to={"/retailer/settings"}>Settings</Link>,

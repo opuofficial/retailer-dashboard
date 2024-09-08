@@ -13,6 +13,7 @@ import LiveChat from "./pages/live-chat";
 import Notification from "./pages/notification";
 import Settings from "./pages/settings";
 import ManageOrder from "./pages/manage-order";
+import OrderList from "./pages/order-list";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: "notification",
         element: <Notification />,
+      },
+      {
+        path: "report/order-list",
+        element: <OrderList />,
       },
       {
         path: "settings",
