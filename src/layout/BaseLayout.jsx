@@ -46,7 +46,7 @@ const sidebarItems = [
   {
     key: "manage-order",
     icon: <FontAwesomeIcon icon={faFile} />,
-    label: "Manage Order",
+    label: <Link to={"/retailer/manage-order"}>Manage Order</Link>,
   },
   {
     key: "live-chat",
