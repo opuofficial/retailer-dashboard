@@ -1,19 +1,42 @@
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Avatar, Tag } from "antd";
-import React from "react";
+import { Avatar, Modal, Tag } from "antd";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LAPPATO from "../../assets/LAPPATO.png";
 
 const OrderDetails = () => {
+  const [isCancelButtonModalOpen, setIsCancelButtonModalOpen] = useState(false);
+
   const navigate = useNavigate();
 
   const handleGoToBack = () => {
     navigate(-1);
   };
 
+  const showCancelButtonModal = () => {
+    setIsCancelButtonModalOpen(true);
+  };
+
+  const handleOkOfCancelButtonModal = () => {
+    setIsCancelButtonModalOpen(false);
+  };
+  const handleCancelOfCancelButtonModal = () => {
+    setIsCancelButtonModalOpen(false);
+  };
+
   return (
     <div>
+      <Modal
+        title="Cancel Order"
+        open={isCancelButtonModalOpen}
+        onOk={handleOkOfCancelButtonModal}
+        onCancel={handleCancelOfCancelButtonModal}
+        cancelText="No"
+        okText="Yes"
+      >
+        <p>Are you sure to cancel this order?</p>
+      </Modal>
       <div className="text-2xl font-semibold flex gap-2 items-center">
         <div
           onClick={handleGoToBack}
@@ -89,7 +112,10 @@ const OrderDetails = () => {
               </div>
               <div>
                 <div className="flex gap-2 mb-2">
-                  <div className="bg-red-500 text-white p-1 font-semibold cursor-pointer">
+                  <div
+                    onClick={showCancelButtonModal}
+                    className="bg-red-500 text-white p-1 font-semibold cursor-pointer"
+                  >
                     Cancel
                   </div>
                   <div className="bg-green-500 text-white p-1 font-semibold cursor-pointer">
