@@ -1,12 +1,14 @@
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Avatar, Modal, Tag } from "antd";
+import { Avatar, Checkbox, Modal, Tag } from "antd";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LAPPATO from "../../assets/LAPPATO.png";
 
 const OrderDetails = () => {
   const [isCancelButtonModalOpen, setIsCancelButtonModalOpen] = useState(false);
+  const [isStatusUpdateButtonModalOpen, setIsStatusUpdateButtonModalOpen] =
+    useState(false);
 
   const navigate = useNavigate();
 
@@ -18,11 +20,19 @@ const OrderDetails = () => {
     setIsCancelButtonModalOpen(true);
   };
 
+  const showStatusUpdateButtonModal = () => {
+    setIsStatusUpdateButtonModalOpen(true);
+  };
+
   const handleOkOfCancelButtonModal = () => {
     setIsCancelButtonModalOpen(false);
   };
   const handleCancelOfCancelButtonModal = () => {
     setIsCancelButtonModalOpen(false);
+  };
+
+  const handleCancelOfStatusUpdateButtonModal = () => {
+    setIsStatusUpdateButtonModalOpen(false);
   };
 
   return (
@@ -36,6 +46,70 @@ const OrderDetails = () => {
         okText="Yes"
       >
         <p>Are you sure to cancel this order?</p>
+      </Modal>
+      <Modal
+        title="Order Status"
+        open={isStatusUpdateButtonModalOpen}
+        footer={null}
+        onCancel={handleCancelOfStatusUpdateButtonModal}
+      >
+        <div className="flex justify-between">
+          <div>
+            <div>Pending</div>
+            <div>Products was ordered on</div>
+            <div>04 Sep, 2024</div>
+          </div>
+          <div>
+            <div>Humayun Kabir </div>
+            <div>Mirpur 14,Ibrahim pur bazar</div>
+            <div>015********</div>
+          </div>
+        </div>
+        <div className="border rounded-md p-3 mt-3">
+          <div className="text-blue-500">Order Id: IHB-82</div>
+          <div>To track the delivery of your order</div>
+        </div>
+        <div className="p-3">
+          <div>Nirvana Enterprise ltd</div>
+          <div className="flex gap-2">
+            <img src={LAPPATO} alt="" className="w-14" />
+            <div className="flex flex-col">
+              <span>LAPPATO 6 SG-01</span>
+              <span>500</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div className="flex">
+            <Checkbox className=" w-16 flex justify-center" checked />
+            <div className="p-3">
+              <div>Pending</div>
+              <div>04 Sep, 2024</div>
+              <div>Info that helps a user with this field.</div>
+            </div>
+          </div>
+          <div className="flex">
+            <Checkbox className=" w-16 flex justify-center" />
+            <div className="p-3">
+              <div>Ready to Shipped</div>
+              <div>Info that helps a user with this field.</div>
+            </div>
+          </div>
+          <div className="flex">
+            <Checkbox className=" w-16 flex justify-center" />
+            <div className="p-3">
+              <div>Shipped</div>
+              <div>Info that helps a user with this field.</div>
+            </div>
+          </div>
+          <div className="flex">
+            <Checkbox className=" w-16 flex justify-center" />
+            <div className="p-3">
+              <div>Delivered</div>
+              <div>Info that helps a user with this field.</div>
+            </div>
+          </div>
+        </div>
       </Modal>
       <div className="text-2xl font-semibold flex gap-2 items-center">
         <div
@@ -118,7 +192,10 @@ const OrderDetails = () => {
                   >
                     Cancel
                   </div>
-                  <div className="bg-green-500 text-white p-1 font-semibold cursor-pointer">
+                  <div
+                    onClick={showStatusUpdateButtonModal}
+                    className="bg-green-500 text-white p-1 font-semibold cursor-pointer"
+                  >
                     Status Update
                   </div>
                 </div>
