@@ -12,8 +12,8 @@ const LiveChat = () => {
   return (
     <div>
       <div className="text-2xl font-semibold mb-4">Live Chat</div>
-      <div className="grid grid-cols-3 gap-5">
-        <div className="col-span-1 rounded-md p-5 bg-white">
+      <div className="md:grid grid-cols-3 gap-5">
+        <div className="col-span-1 rounded-md p-5 bg-white mb-3 md:mb-0">
           <div className="text-lg mb-2 font-semibold">Message</div>
           <Input
             placeholder="Search by name"

@@ -87,7 +87,7 @@ const Settings = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-5 mt-5">
+      <div className="md:grid grid-cols-3 gap-5 mt-5">
         <div className="col-span-1">
           <div className="bg-white">
             <div className="bg-slate-200 w-full h-16 relative">
