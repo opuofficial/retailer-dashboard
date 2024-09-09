@@ -2,6 +2,7 @@ import { faImage, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Select, Table } from "antd";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const PendingProducts = () => {
   const columns = [
@@ -49,12 +50,14 @@ const PendingProducts = () => {
     <div>
       <div className="flex justify-between items-center">
         <div className="text-2xl font-semibold mb-4">Add New Product</div>
-        <Button
-          className="bg-primary text-white font-semibold text-lg p-5 rounded-md"
-          icon={<FontAwesomeIcon icon={faPlus} />}
-        >
-          Create New
-        </Button>
+        <Link to={"/retailer/manage-products/pending-products/create-product"}>
+          <Button
+            className="bg-primary text-white font-semibold text-lg p-5 rounded-md"
+            icon={<FontAwesomeIcon icon={faPlus} />}
+          >
+            Create New
+          </Button>
+        </Link>
       </div>
 
       <div className="flex justify-between mt-4">

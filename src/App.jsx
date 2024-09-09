@@ -16,6 +16,7 @@ import ManageOrder from "./pages/manage-order";
 import OrderList from "./pages/order-list";
 import OrderDetails from "./pages/order-details";
 import PendingProducts from "./pages/pending-products";
+import CreateProduct from "./pages/create-product";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: "manage-products/pending-products",
         element: <PendingProducts />,
+      },
+      {
+        path: "manage-products/pending-products/create-product",
+        element: <CreateProduct />,
       },
       {
         path: "manage-order",
