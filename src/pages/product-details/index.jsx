@@ -30,7 +30,7 @@ const ProductDetails = () => {
         </span>
       </div>
 
-      <div className="grid grid-cols-2 mt-5">
+      <div className="sm:grid grid-cols-2 mt-5">
         <div className="col-span-1">
           <div>
             <img src={displayImage} alt="" />
