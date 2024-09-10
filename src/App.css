@@ -30,3 +30,7 @@
 .ql-container {
     height: 250px;
 }
+
+:where(.css-1sl8jbg).ant-menu-light.ant-menu-inline .ant-menu-sub.ant-menu-inline, :where(.css-1sl8jbg).ant-menu-light>.ant-menu.ant-menu-inline .ant-menu-sub.ant-menu-inline {
+    background: transparent;
+}
