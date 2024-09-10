@@ -34,7 +34,11 @@ const sidebarItems = [
       {
         key: "all-products",
         icon: <FontAwesomeIcon icon={faBarsStaggered} />,
-        label: "All Products",
+        label: (
+          <Link to={"/retailer/manage-products/all-products"}>
+            All Products
+          </Link>
+        ),
       },
       {
         key: "pending-products",
