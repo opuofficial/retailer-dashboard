@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { Button, Layout, Menu, theme } from "antd";
+import { Button, Drawer, Layout, Menu, theme } from "antd";
 import {
   faBars,
   faBarsStaggered,
@@ -98,6 +98,7 @@ const items = [
 
 const BaseLayout = () => {
   const [collapsed, setCollapsed] = useState(window.innerWidth < 1250);
+  const [open, setOpen] = useState(false);
   const [language, setLanguage] = useState("eng");
   const [showNotification, setShowNotification] = useState(false);
   const notificationBoxRef = useRef();
@@ -156,8 +157,9 @@ const BaseLayout = () => {
             left: 0,
             top: 0,
           }}
+          className="hidden sm:block"
         >
-          <div className="p-6 border border-slate-100">
+          <div className="p-6">
             <img
               src={collapsed ? G_Logo : GhorBari_Logo}
               className="w-28"
@@ -190,6 +192,42 @@ const BaseLayout = () => {
             )}
           </div>
         </Sider>
+        <Drawer
+          width={310}
+          className="sm:hidden"
+          open={open}
+          onClose={() => setOpen(false)}
+          placement="left"
+        >
+          <div className="p-6">
+            <img src={GhorBari_Logo} className="w-28" alt="GhorBari Logo" />
+          </div>
+          <Menu
+            theme="light"
+            mode="inline"
+            defaultSelectedKeys={["dashboard"]}
+            items={sidebarItems}
+            className={collapsed ? "p-2" : "p-6"}
+          />
+          <div
+            style={{
+              position: "fixed",
+              display: "flex",
+              alignItems: "end",
+              bottom: 0,
+              padding: "1.5rem",
+            }}
+          >
+            {collapsed ? (
+              <img src={BSRM_Icon} alt="BSRM Logo" />
+            ) : (
+              <div className="flex flex-col gap-1">
+                <span className="text-xs">Powered by</span>
+                <img src={BSRM_Logo} className="w-20" alt="BSRM Logo" />
+              </div>
+            )}
+          </div>
+        </Drawer>
         <Layout className="bg-[#f9fafb]">
           <Header className="flex justify-between items-center bg-white shadow-sm py-8">
             <Button
@@ -199,6 +237,16 @@ const BaseLayout = () => {
               style={{
                 fontSize: "1.3rem",
               }}
+              className="hidden sm:block"
+            />
+            <Button
+              type="text"
+              icon={<FontAwesomeIcon icon={faBars} />}
+              onClick={() => setOpen(!open)}
+              style={{
+                fontSize: "1.3rem",
+              }}
+              className="sm:hidden"
             />
 
             {/* Language Button Group */}
