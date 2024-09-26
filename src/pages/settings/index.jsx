@@ -1,7 +1,10 @@
 import { faEnvelopeOpen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Avatar, Button, Image, Table } from "antd";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import api from "../../api";
+import { AuthContext } from "../../providers/AuthProvider";
+import toast from "react-hot-toast";
 
 const dataSource = [
   {
@@ -61,6 +64,52 @@ const columns = [
 
 const Settings = () => {
   const [userInfoTab, setUserInfoTab] = useState(true);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [error, setError] = useState(false);
+  const { user } = useContext(AuthContext);
+
+  const handleChangePassword = async () => {
+    if (!currentPassword || !newPassword || !confirmNewPassword) {
+      return setError("Fill up all the fields!");
+    } else {
+      setError(false);
+    }
+
+    if (newPassword != confirmNewPassword) {
+      return setError("Passwords do not match");
+    }
+
+    try {
+      await api.patch(
+        "/retailer-auth/update-my-password",
+        {
+          passwordCurrent: currentPassword,
+          password: newPassword,
+          passwordConfirm: confirmNewPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      setError(false);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+
+      toast.success("Password changed successfully!");
+    } catch (error) {
+      console.log(error);
+      setError(error.response.data.message);
+    }
+  };
 
   return (
     <div>
@@ -171,16 +220,25 @@ const Settings = () => {
                 </label>
                 <div className="mt-2.5 rounded-md flex border px-3 items-center bg-white border-slate-300">
                   <span className="border-r pr-3">
-                    <i class="fa-solid fa-key"></i>
+                    <i className="fa-solid fa-key"></i>
                   </span>
                   <input
-                    type={"password"}
+                    type={showCurrentPassword ? "text" : "password"}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
                     className="w-full outline-none p-2"
                     id="oldPassword"
                     placeholder="******"
                   />
-                  <span className="cursor-pointer">
-                    <i class="fa-regular fa-eye"></i>
+                  <span
+                    className="cursor-pointer"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  >
+                    {showCurrentPassword ? (
+                      <i className="fa-regular fa-eye-slash"></i>
+                    ) : (
+                      <i className="fa-regular fa-eye"></i>
+                    )}
                   </span>
                 </div>
               </div>
@@ -190,16 +248,25 @@ const Settings = () => {
                 </label>
                 <div className="mt-2.5 rounded-md flex border px-3 items-center bg-white border-slate-300">
                   <span className="border-r pr-3">
-                    <i class="fa-solid fa-key"></i>
+                    <i className="fa-solid fa-key"></i>
                   </span>
                   <input
-                    type={"password"}
+                    type={showNewPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
                     className="w-full outline-none p-2"
                     id="newPassword"
                     placeholder="******"
                   />
-                  <span className="cursor-pointer">
-                    <i class="fa-regular fa-eye"></i>
+                  <span
+                    className="cursor-pointer"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                  >
+                    {showNewPassword ? (
+                      <i className="fa-regular fa-eye-slash"></i>
+                    ) : (
+                      <i className="fa-regular fa-eye"></i>
+                    )}
                   </span>
                 </div>
               </div>
@@ -209,21 +276,39 @@ const Settings = () => {
                 </label>
                 <div className="mt-2.5 rounded-md flex border px-3 items-center bg-white border-slate-300">
                   <span className="border-r pr-3">
-                    <i class="fa-solid fa-key"></i>
+                    <i className="fa-solid fa-key"></i>
                   </span>
                   <input
-                    type={"password"}
+                    type={showConfirmNewPassword ? "text" : "password"}
+                    value={confirmNewPassword}
+                    onChange={(e) => setConfirmNewPassword(e.target.value)}
                     className="w-full outline-none p-2"
                     id="confirmNewPassword"
                     placeholder="******"
                   />
-                  <span className="cursor-pointer">
-                    <i class="fa-regular fa-eye"></i>
+                  <span
+                    className="cursor-pointer"
+                    onClick={() =>
+                      setShowConfirmNewPassword(!showConfirmNewPassword)
+                    }
+                  >
+                    {showConfirmNewPassword ? (
+                      <i className="fa-regular fa-eye-slash"></i>
+                    ) : (
+                      <i className="fa-regular fa-eye"></i>
+                    )}
                   </span>
                 </div>
               </div>
+              {/* error message */}
+              {error && (
+                <div className="text-red-400 font-semibold">{error}</div>
+              )}
 
-              <Button className="bg-primary text-white w-full font-bold mt-3 py-5">
+              <Button
+                className="bg-primary text-white w-full font-bold mt-3 py-5"
+                onClick={handleChangePassword}
+              >
                 Update Password
               </Button>
             </div>

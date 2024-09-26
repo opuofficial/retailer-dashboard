@@ -33,7 +33,7 @@ const Login = () => {
       console.log(res);
     } catch (error) {
       if (error.status == 401) {
-        toast.error(error.response.data.error);
+        toast.error("Invalid credentials");
       } else {
         toast.error("Something went wrong!");
       }
