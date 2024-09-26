@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Button, Drawer, Layout, Menu, theme } from "antd";
 import {
@@ -19,6 +19,7 @@ import G_Logo from "../assets/G.svg";
 import BSRM_Logo from "../assets/BSRM_Logo.svg";
 import BSRM_Icon from "../assets/bsrm_icon.svg";
 import { Dropdown, Avatar } from "antd";
+import { AuthContext } from "../providers/AuthProvider";
 
 const sidebarItems = [
   {
@@ -85,17 +86,6 @@ const sidebarItems = [
   },
 ];
 
-const items = [
-  {
-    key: "1",
-    label: "Profile",
-  },
-  {
-    key: "2",
-    label: "Logout",
-  },
-];
-
 const BaseLayout = () => {
   const [collapsed, setCollapsed] = useState(window.innerWidth < 1250);
   const [open, setOpen] = useState(false);
@@ -105,6 +95,8 @@ const BaseLayout = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const { logoutUser } = useContext(AuthContext);
 
   const handleNotificationIconClick = () => {
     setShowNotification(!showNotification);
@@ -229,7 +221,7 @@ const BaseLayout = () => {
           </div>
         </Drawer>
         <Layout className="bg-[#f9fafb]">
-          <Header className="flex justify-between items-center bg-white shadow-sm py-8">
+          <Header className="flex justify-between items-center bg-white shadow-sm px-5">
             <Button
               type="text"
               icon={<FontAwesomeIcon icon={faBars} />}
@@ -250,7 +242,7 @@ const BaseLayout = () => {
             />
 
             {/* Language Button Group */}
-            <div className="pr-6 flex items-center gap-6">
+            <div className="pr-0 flex items-center gap-6">
               <div className="cursor-pointer border-2 border-solid border-primary flex rounded-full overflow-hidden">
                 <Button
                   style={{ borderRadius: 0, border: 0, fontWeight: "bold" }}
@@ -293,7 +285,16 @@ const BaseLayout = () => {
 
               <Dropdown
                 menu={{
-                  items,
+                  items: [
+                    {
+                      key: "1",
+                      label: "Profile",
+                    },
+                    {
+                      key: "2",
+                      label: <div onClick={logoutUser}>Logout</div>,
+                    },
+                  ],
                 }}
                 placement="bottomRight"
                 className="cursor-pointer"

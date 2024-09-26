@@ -19,6 +19,9 @@ import PendingProducts from "./pages/pending-products";
 import CreateProduct from "./pages/create-product";
 import AllProducts from "./pages/all-products";
 import ProductDetails from "./pages/product-details";
+import { Toaster } from "react-hot-toast";
+import AuthProvider from "./providers/AuthProvider";
+import Protected from "./pages/protected";
 
 const router = createBrowserRouter([
   {
@@ -31,7 +34,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/retailer",
-    element: <BaseLayout />,
+    element: (
+      <Protected>
+        <BaseLayout />
+      </Protected>
+    ),
     children: [
       {
         path: "dashboard",
@@ -94,7 +101,10 @@ function App() {
         },
       }}
     >
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+      <Toaster />
     </ConfigProvider>
   );
 }
