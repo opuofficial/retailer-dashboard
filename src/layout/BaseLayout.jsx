@@ -165,7 +165,7 @@ const BaseLayout = () => {
             items={sidebarItems}
             className={collapsed ? "p-2" : "p-6"}
           />
-          <div
+          {/* <div
             style={{
               position: "fixed",
               display: "flex",
@@ -182,7 +182,7 @@ const BaseLayout = () => {
                 <img src={BSRM_Logo} className="w-20" alt="BSRM Logo" />
               </div>
             )}
-          </div>
+          </div> */}
         </Sider>
         <Drawer
           width={310}

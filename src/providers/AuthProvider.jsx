@@ -13,7 +13,7 @@ const AuthProvider = ({ children }) => {
 
   const values = { user, setUser, isLoading, logoutUser };
 
-  console.log({ user });
+  // console.log({ user });
 
   useEffect(() => {
     const getUserFromLocalStorage = localStorage.getItem(
