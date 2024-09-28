@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import DashboardCard from "../DashboardCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,74 +9,89 @@ import {
   faGem,
   faHourglassHalf,
   faTruck,
+  faUser,
   faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
+import api from "../../api";
+import { useQuery } from "@tanstack/react-query";
+import { AuthContext } from "../../providers/AuthProvider";
+
+const fetchOrderRelatedData = (token, fromDate = "", toDate = "") => {
+  return api.get(
+    `/retailer-panel/dashboard/about-order-related?fromDate=${fromDate}&toDate=${toDate}`,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+};
+
+function formatNumber(num) {
+  let formattedNumber = num?.toFixed(2);
+  formattedNumber = formattedNumber?.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  return formattedNumber;
+}
 
 const DashboardCards = () => {
+  const { user } = useContext(AuthContext);
+
+  const orderDataQuery = useQuery({
+    queryKey: ["order-data"],
+    queryFn: () => fetchOrderRelatedData(user.token),
+  });
+
+  console.log(orderDataQuery.data?.data);
+
   const cardsData = [
     {
       id: 1,
       label: "Total Revenue",
       icon: <FontAwesomeIcon icon={faChartLine} />,
-      value: "6530000.98",
-      percentage: "+3.4%",
-      footerText: "increase this week",
+      value: formatNumber(orderDataQuery.data?.data.totalRevenue),
     },
     {
       id: 2,
       label: "Total Customers",
       icon: <FontAwesomeIcon icon={faUserGroup} />,
-      value: "8,652",
-      percentage: "+0.10%",
-      footerText: "increase this week",
+      value: formatNumber(orderDataQuery.data?.data.totalCustomers),
     },
     {
       id: 3,
       label: "Total Orders",
       icon: <FontAwesomeIcon icon={faCartShopping} />,
-      value: "12,784",
-      percentage: "145",
-      footerText: "increase this week",
+      value: formatNumber(orderDataQuery.data?.data.totalOrder),
     },
     {
       id: 4,
       label: "Delivered Orders",
       icon: <FontAwesomeIcon icon={faTruck} />,
-      value: "7,983",
-      percentage: "+0.20%",
-      footerText: "increase this week",
+      value: formatNumber(orderDataQuery.data?.data.deliveredOrder),
     },
     {
       id: 5,
       label: "Pending Order",
       icon: <FontAwesomeIcon icon={faHourglassHalf} />,
-      value: "2,045",
-      percentage: "105k",
-      footerText: "Pending Order value",
+      value: formatNumber(orderDataQuery.data?.data.pendingOrder),
     },
     {
       id: 6,
       label: "Order Cancellation",
       icon: <FontAwesomeIcon icon={faBan} />,
-      value: "0.37%",
-      percentage: "-0.10%",
-      footerText: "decrease this week",
+      value: formatNumber(orderDataQuery.data?.data.cancelOrder),
     },
     {
       id: 7,
-      label: "Failed Order",
-      icon: <FontAwesomeIcon icon={faFileCircleXmark} />,
-      value: "0.16%",
-      percentage: "+0.10%",
-      footerText: "decrease this week",
+      label: "Value Per Customer",
+      icon: <FontAwesomeIcon icon={faUser} />,
+      value: formatNumber(orderDataQuery.data?.data.valuePerCustomer),
     },
     {
       id: 8,
       label: "Active SKU",
       icon: <FontAwesomeIcon icon={faGem} />,
-      value: "364",
-      percentage: "+0.02%",
-      footerText: "increase this week",
+      value: formatNumber(orderDataQuery.data?.data.totalActiveSKU),
     },
   ];
 
