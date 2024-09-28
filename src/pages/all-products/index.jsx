@@ -4,14 +4,15 @@ import {
   faImage,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Select, Table } from "antd";
-import React from "react";
+import { Button, Select, Table } from "antd";
+import React, { useContext, useState } from "react";
 import visitorChair from "../../assets/visitor-chair.png";
 import lappato from "../../assets/LAPPATO.png";
 import bashundharaCement from "../../assets/bashundhara-cement.jpg";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import api from "../../api";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const columns = [
   {
@@ -25,7 +26,12 @@ const columns = [
       return <FontAwesomeIcon icon={faImage} />;
     },
     render: (record) => {
-      return <img src={record.image} className="w-14" />;
+      return (
+        <img
+          src={`https://sgp1.digitaloceanspaces.com/staging-ihbbsrmbackend/${record.image}`}
+          className="w-14"
+        />
+      );
     },
   },
   {
@@ -34,8 +40,8 @@ const columns = [
     render: (record) => {
       return (
         <div>
-          <div>{record.title}</div>
-          <div>{record.productId}</div>
+          <div>{record.name}</div>
+          <div>{record.sku}</div>
         </div>
       );
     },
@@ -43,12 +49,12 @@ const columns = [
   {
     key: "category",
     title: "Category",
-    dataIndex: "category",
+    render: (record) => record?.categoryId.name,
   },
   {
     key: "brand",
     title: "Brand",
-    dataIndex: "brand",
+    render: (record) => record?.brandId.name,
   },
   {
     key: "totalunit",
@@ -57,7 +63,7 @@ const columns = [
       return (
         <div>
           <div>
-            {record.totalUnit} {record.category == "Cement" ? "Bag" : "PCS"}
+            {record.stockQuantity} {record.unit}
           </div>
           <div>
             <span className="mr-2 text-green-500">
@@ -75,8 +81,8 @@ const columns = [
     render: (record) => {
       return (
         <div>
-          <div>{record.price} BDT</div>
-          <div>{record.discount}% Off</div>
+          <div>{record.regularPrice} BDT</div>
+          <div>{record.discountPercentage}% Off</div>
         </div>
       );
     },
@@ -85,7 +91,16 @@ const columns = [
     key: "status",
     title: "Status",
     render: (record) => {
-      return <div>{record.status}</div>;
+      const statusStyles =
+        record.status === "Active"
+          ? "text-green-500 bg-green-100"
+          : "text-red-500 bg-red-100";
+
+      return (
+        <div className={`${statusStyles} text-center font-semibold rounded`}>
+          {record.status}
+        </div>
+      );
     },
   },
   {
@@ -94,7 +109,7 @@ const columns = [
     render: (_, record) => {
       return (
         <Link
-          to={`/retailer/manage-products/all-products/details/${record.id}`}
+          to={`/retailer/manage-products/all-products/details/${record._id}`}
         >
           <FontAwesomeIcon
             icon={faEye}
@@ -103,51 +118,6 @@ const columns = [
         </Link>
       );
     },
-  },
-];
-
-const dataSource = [
-  {
-    key: "1",
-    id: "productId1",
-    no: "1",
-    image: visitorChair,
-    title: "Visitor Chair",
-    productId: "200010005",
-    category: "Adhesive Granite and Natural Stones",
-    brand: "AKS",
-    totalUnit: 15,
-    price: 700,
-    discount: 0,
-    status: "active",
-  },
-  {
-    key: "2",
-    id: "productId2",
-    no: "2",
-    image: lappato,
-    title: "LAPPATO 6 SGA-01",
-    productId: "200010003",
-    category: "Ceramic Tiles",
-    brand: "Akij Ceramics",
-    totalUnit: 29977,
-    price: 120,
-    discount: 8.33,
-    status: "active",
-  },
-  {
-    key: "3",
-    id: "productId3",
-    no: "3",
-    image: bashundharaCement,
-    title: "Bashundhara Cement",
-    productId: "200010001",
-    category: "Cement",
-    brand: "Bashundhara Cement",
-    totalUnit: 5000,
-    price: 490,
-    discount: 0,
-    status: "active",
   },
 ];
 
@@ -161,7 +131,32 @@ const getAllBrands = () => {
   return api.get("/brand/data?limit=0&pageNo=0&status=true");
 };
 
+const getAllProducts = (
+  token,
+  pageNo,
+  limit,
+  status,
+  brandId = "",
+  categoryId = ""
+) => {
+  return api.get(
+    `/retailer-panel/product/data?pageNo=${pageNo}&limit=${limit}&status=${status}&brandId=${brandId}&categoryId=${categoryId}&retailerRequestStatus=Approved`,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+};
+
 const AllProducts = () => {
+  const { user } = useContext(AuthContext);
+  const [pageNo, setPageNo] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [status, setStatus] = useState("Active");
+  const [brandId, setBrandId] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+
   const categoriesQuery = useQuery({
     queryKey: ["categories"],
     queryFn: getAllCategories,
@@ -195,16 +190,40 @@ const AllProducts = () => {
     };
   });
 
+  let allProductsQuery = useQuery({
+    queryKey: ["all-products", pageNo, limit, status, brandId, categoryId],
+    queryFn: () =>
+      getAllProducts(user.token, pageNo, limit, status, brandId, categoryId),
+    refetchOnWindowFocus: false,
+  });
+
+  const allProductsQueryResponse = allProductsQuery.data?.data;
+  let allProductsData = allProductsQueryResponse?.products;
+
+  allProductsData = allProductsData?.map((product, index) => {
+    return {
+      ...product,
+      no: index + 1,
+      key: index + 1,
+    };
+  });
+
   const onCategoryChange = (value) => {
-    console.log(`selected ${value}`);
+    setCategoryId(value);
   };
 
   const onBrandChange = (value) => {
-    console.log(`selected ${value}`);
+    setBrandId(value);
   };
 
   const onStatusChange = (value) => {
-    console.log(`selected ${value}`);
+    setStatus(value);
+  };
+
+  const resetAllFilter = () => {
+    setCategoryId("");
+    setBrandId("");
+    setStatus("Active");
   };
 
   return (
@@ -239,12 +258,17 @@ const AllProducts = () => {
           <div>of 15</div>
         </div>
         <div className="flex items-center gap-2">
+          {(categoryId || brandId || status != "Active") && (
+            <Button onClick={resetAllFilter}>Reset Filter</Button>
+          )}
+
           <Select
             showSearch
             placeholder="Filter By Category"
             optionFilterProp="label"
             options={allCategories}
             onChange={onCategoryChange}
+            allowClear
           />
           <Select
             showSearch
@@ -252,12 +276,13 @@ const AllProducts = () => {
             options={allBrands}
             optionFilterProp="label"
             onChange={onBrandChange}
+            allowClear
           />
           <Select
             placeholder="Active"
             options={[
-              { label: "Active", value: "active" },
-              { label: "Inactive", value: "inactive" },
+              { label: "Active", value: "Active" },
+              { label: "Inactive", value: "Inactive" },
             ]}
             onChange={onStatusChange}
           />
@@ -265,7 +290,15 @@ const AllProducts = () => {
       </div>
 
       <div className="mt-5 bg-white">
-        <Table columns={columns} dataSource={dataSource} pagination={false} />
+        {allProductsQuery.isLoading ? (
+          <div className="">Loading</div>
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={allProductsData}
+            pagination={false}
+          />
+        )}
       </div>
     </div>
   );
