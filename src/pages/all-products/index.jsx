@@ -4,7 +4,7 @@ import {
   faImage,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Select, Table } from "antd";
+import { Button, Pagination, Select, Table } from "antd";
 import React, { useContext, useState } from "react";
 import visitorChair from "../../assets/visitor-chair.png";
 import lappato from "../../assets/LAPPATO.png";
@@ -208,15 +208,21 @@ const AllProducts = () => {
     };
   });
 
-  const onCategoryChange = (value) => {
+  // console.log(allProductsQueryResponse.totalLength);
+
+  const handleLimitChange = (value) => {
+    setLimit(value);
+  };
+
+  const handleCategoryChange = (value) => {
     setCategoryId(value);
   };
 
-  const onBrandChange = (value) => {
+  const handleBrandChange = (value) => {
     setBrandId(value);
   };
 
-  const onStatusChange = (value) => {
+  const handleStatusChange = (value) => {
     setStatus(value);
   };
 
@@ -254,8 +260,9 @@ const AllProducts = () => {
                 value: "100",
               },
             ]}
+            onChange={handleLimitChange}
           />
-          <div>of 15</div>
+          <div>of {allProductsQueryResponse?.totalLength}</div>
         </div>
         <div className="flex items-center gap-2">
           {(categoryId || brandId || status != "Active") && (
@@ -267,7 +274,7 @@ const AllProducts = () => {
             placeholder="Filter By Category"
             optionFilterProp="label"
             options={allCategories}
-            onChange={onCategoryChange}
+            onChange={handleCategoryChange}
             allowClear
           />
           <Select
@@ -275,7 +282,7 @@ const AllProducts = () => {
             placeholder="Filter By Brand"
             options={allBrands}
             optionFilterProp="label"
-            onChange={onBrandChange}
+            onChange={handleBrandChange}
             allowClear
           />
           <Select
@@ -284,21 +291,32 @@ const AllProducts = () => {
               { label: "Active", value: "Active" },
               { label: "Inactive", value: "Inactive" },
             ]}
-            onChange={onStatusChange}
+            onChange={handleStatusChange}
           />
         </div>
       </div>
 
       <div className="mt-5 bg-white">
-        {allProductsQuery.isLoading ? (
-          <div className="">Loading</div>
-        ) : (
+        <>
           <Table
             columns={columns}
             dataSource={allProductsData}
             pagination={false}
+            loading={allProductsQuery.isLoading}
           />
-        )}
+        </>
+      </div>
+      <div className="flex justify-between py-3">
+        <div>
+          Showing {pageNo} of{" "}
+          {Math.ceil(allProductsQueryResponse?.totalLength / limit)} Page
+        </div>
+        <div>
+          <Pagination
+            defaultCurrent={1}
+            total={allProductsQueryResponse?.totalLength}
+          />
+        </div>
       </div>
     </div>
   );
