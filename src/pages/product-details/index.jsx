@@ -1,16 +1,57 @@
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import productDetails1 from "../../assets/productDetails1.png";
 import productDetails2 from "../../assets/productDetails2.png";
 import productDetails3 from "../../assets/productDetails3.png";
 import visitorChair from "../../assets/visitor-chair.png";
 import { Button } from "antd";
+import api from "../../api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { AuthContext } from "../../providers/AuthProvider";
+
+const fetchProductById = (token, productId) => {
+  return api.get(`/retailer-panel/product/${productId}`, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+};
 
 const ProductDetails = () => {
+  const { user } = useContext(AuthContext);
+  const { id } = useParams();
+  const queryClient = useQueryClient();
+
   const navigate = useNavigate();
   const [displayImage, setDisplayImage] = useState(productDetails3);
+
+  const cachedQueries = queryClient.getQueriesData();
+
+  const allProductsCached = cachedQueries.find((queries) => {
+    if (queries[0].includes("all-products")) {
+      return queries;
+    }
+  });
+
+  const products = allProductsCached && allProductsCached[1].data.products;
+
+  let { data: product } = useQuery({
+    queryKey: ["product"],
+    queryFn: () => fetchProductById(user.token, id),
+    enabled: !products,
+  });
+
+  if (products) {
+    product = products.find((product) => {
+      return product._id == id;
+    });
+  } else {
+    product = product?.data.product;
+  }
+
+  console.log(product);
 
   const handleGoToBack = () => {
     navigate(-1);
@@ -78,8 +119,8 @@ const ProductDetails = () => {
               seating.
             </div>
 
-            <div class="my-4 bg-[#F2F5FF] p-[14px] rounded-[10px]">
-              <p class="text-[#4A72FF] text-[14px] font-semibold leading-6 flex justify-start items-center">
+            <div className="my-4 bg-[#F2F5FF] p-[14px] rounded-[10px]">
+              <p className="text-[#4A72FF] text-[14px] font-semibold leading-6 flex justify-start items-center">
                 Usually Delivers in 24 to 48 hours.
               </p>
             </div>
