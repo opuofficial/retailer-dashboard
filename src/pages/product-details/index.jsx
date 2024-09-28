@@ -1,6 +1,6 @@
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import productDetails1 from "../../assets/productDetails1.png";
 import productDetails2 from "../../assets/productDetails2.png";
@@ -25,7 +25,7 @@ const ProductDetails = () => {
   const queryClient = useQueryClient();
 
   const navigate = useNavigate();
-  const [displayImage, setDisplayImage] = useState(productDetails3);
+  const [displayImage, setDisplayImage] = useState(null);
 
   const cachedQueries = queryClient.getQueriesData();
 
@@ -37,10 +37,11 @@ const ProductDetails = () => {
 
   const products = allProductsCached && allProductsCached[1].data.products;
 
-  let { data: product } = useQuery({
+  let { data: product, isLoading } = useQuery({
     queryKey: ["product"],
     queryFn: () => fetchProductById(user.token, id),
     enabled: !products,
+    refetchOnWindowFocus: false,
   });
 
   if (products) {
@@ -51,11 +52,19 @@ const ProductDetails = () => {
     product = product?.data.product;
   }
 
-  console.log(product);
+  useEffect(() => {
+    setDisplayImage(product?.image);
+  }, [product]);
 
   const handleGoToBack = () => {
     navigate(-1);
   };
+
+  if (isLoading) {
+    return null;
+  }
+
+  console.log(product);
 
   return (
     <div className="relative">
@@ -74,41 +83,44 @@ const ProductDetails = () => {
       <div className="sm:grid grid-cols-2 mt-5">
         <div className="col-span-1">
           <div>
-            <img src={displayImage} alt="" />
+            <img
+              src={`https://sgp1.digitaloceanspaces.com/staging-ihbbsrmbackend/${displayImage}`}
+              alt=""
+              className="w-[75%] mb-5"
+            />
           </div>
-          <div className="flex">
+          <div className="flex gap-3">
             <img
               className="w-20 h-20"
-              src={productDetails3}
-              onClick={() => setDisplayImage(productDetails3)}
-              alt="visitor chair"
+              src={`https://sgp1.digitaloceanspaces.com/staging-ihbbsrmbackend/${product.image}`}
+              onClick={() => setDisplayImage(product.image)}
+              alt=""
             />
-            <img
-              className="w-20 h-20"
-              src={productDetails2}
-              onClick={() => setDisplayImage(productDetails2)}
-              alt="visitor chair"
-            />
-            <img
-              className="w-20 h-20"
-              src={productDetails1}
-              onClick={() => setDisplayImage(productDetails1)}
-              alt="visitor chair"
-            />
+            {product.gallery.map((image) => (
+              <img
+                key={image}
+                className="w-20 h-20"
+                src={`https://sgp1.digitaloceanspaces.com/staging-ihbbsrmbackend/${image}`}
+                onClick={() => setDisplayImage(image)}
+                alt=""
+              />
+            ))}
           </div>
         </div>
         <div className="col-span-1">
           <div>
-            <div className="text-lg font-semibold">Visitor chair</div>
+            <div className="text-lg font-semibold">{product.name}</div>
             <div className="flex gap-2">
               <div>Category</div>
-              <div>Adhesive Granite and Natural Stones</div>
+              <div>{product.categoryId.name}</div>
               <div>In Stock</div>
-              <div>Unit : 15 PCS</div>
+              <div>
+                Unit : {product.stockQuantity} {product.unit}
+              </div>
             </div>
-            <div className="mt-3">Brand : AKS</div>
+            <div className="mt-3">Brand : {product.brandId.name}</div>
             <div className="my-4 border-t border-b py-4">
-              Regular Price : 700
+              Regular Price : {product.regularPrice}
             </div>
             <div className="text-xs">
               Elevate your space with our premium chairs, crafted for comfort
@@ -155,10 +167,14 @@ const ProductDetails = () => {
       <div className="sticky w-full bg-white py-3 bottom-0 left-0 px-5">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <img src={visitorChair} className="w-24" alt="" />
-            <div>
-              <div className="text-lg font-semibold">Visitor chair</div>
-              <div>Regular Price : 700</div>
+            <img
+              src={`https://sgp1.digitaloceanspaces.com/staging-ihbbsrmbackend/${product.image}`}
+              className="w-24"
+              alt=""
+            />
+            <div className="ml-4">
+              <div className="text-lg font-semibold">{product.name}</div>
+              <div>Regular Price : {product.regularPrice}</div>
             </div>
           </div>
           <div>
