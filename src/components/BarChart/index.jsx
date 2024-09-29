@@ -65,7 +65,7 @@ const BarChart = () => {
   const series = [
     {
       name: "Values",
-      data: weeklySalesQuery.data?.data.weeklySales,
+      data: weeklySalesQuery.data?.data.weeklySales || [],
     },
   ];
   return (

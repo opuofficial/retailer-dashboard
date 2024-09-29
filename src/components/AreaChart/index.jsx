@@ -4,10 +4,46 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DatePicker } from "antd";
-import React from "react";
+import React, { useContext, useState } from "react";
 import ReactApexChart from "react-apexcharts";
+import api from "../../api";
+import { AuthContext } from "../../providers/AuthProvider";
+import { useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+
+const fetchSalesThisYear = (token, year) => {
+  return api.get(`/retailer-panel/dashboard/sales-this-year?year=${year}`, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+};
 
 const AreaChart = () => {
+  const { user } = useContext(AuthContext);
+  const [salesYear, setSalesYear] = useState(2024);
+
+  const {
+    data: salesByYear,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["sales-by-year", salesYear],
+    queryFn: () => fetchSalesThisYear(user.token, salesYear),
+  });
+
+  const monthlySales = salesByYear?.data?.monthlySales;
+  const salesData = Array(12).fill(0);
+
+  monthlySales?.forEach((sale) => {
+    const monthIndex = sale._id.month - 1;
+    salesData[monthIndex] = sale.sum;
+  });
+
+  const handleYearChange = (_, value) => {
+    setSalesYear(value);
+  };
+
   const options = {
     chart: {
       type: "area",
@@ -46,12 +82,13 @@ const AreaChart = () => {
   const series = [
     {
       name: "Sales",
-      data: [
-        20000, 10000, 20000, 10000, 9000, 8000, 11000, 7000, 5000, 8000, 6000,
-        5000,
-      ],
+      data: salesData,
     },
   ];
+
+  if (isError) {
+    toast.error("Something went wrong!");
+  }
 
   return (
     <div>
@@ -64,7 +101,7 @@ const AreaChart = () => {
             15%
           </span>
         </div>
-        <DatePicker picker="year" />
+        <DatePicker picker="year" onChange={handleYearChange} />
       </div>
 
       <div className="text-lg my-2 font-semibold">Sales This Months</div>
