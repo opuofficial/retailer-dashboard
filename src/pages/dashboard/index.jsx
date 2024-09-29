@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
@@ -8,6 +8,12 @@ import CharsSection from "../../components/ChartsSection";
 const { RangePicker } = DatePicker;
 
 const Dashboard = () => {
+  const [dateRange, setDateRange] = useState([]);
+
+  const handleDatePicker = (_, value) => {
+    setDateRange(value);
+  };
+
   return (
     <section>
       <div className="heading flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -20,12 +26,12 @@ const Dashboard = () => {
             />
           </div>
           <div>
-            <RangePicker />
+            <RangePicker onChange={handleDatePicker} />
           </div>
         </div>
       </div>
 
-      <DashboardCards />
+      <DashboardCards dateRange={dateRange} />
       <CharsSection />
     </section>
   );

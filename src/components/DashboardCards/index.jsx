@@ -34,15 +34,16 @@ function formatNumber(num) {
   return formattedNumber;
 }
 
-const DashboardCards = () => {
+const DashboardCards = ({ dateRange }) => {
   const { user } = useContext(AuthContext);
 
   const orderDataQuery = useQuery({
-    queryKey: ["order-data"],
-    queryFn: () => fetchOrderRelatedData(user.token),
+    queryKey: ["order-data", dateRange],
+    queryFn: () =>
+      fetchOrderRelatedData(user.token, dateRange[0], dateRange[1]),
   });
 
-  console.log(orderDataQuery.data?.data);
+  // console.log(orderDataQuery.data?.data);
 
   const cardsData = [
     {
