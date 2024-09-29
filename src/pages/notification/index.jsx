@@ -1,9 +1,50 @@
 import { Select, DatePicker, Pagination, Avatar, Badge } from "antd";
 const { RangePicker } = DatePicker;
 
-import React from "react";
+import React, { useContext, useState } from "react";
+import api from "../../api";
+import { useQuery } from "@tanstack/react-query";
+import { AuthContext } from "../../providers/AuthProvider";
+import NotificationCard from "../../components/NotificationCard";
+
+const fetchNotifications = (token, limit, pageNo, dateFilter) => {
+  return api.get(
+    `/retailer-panel/notification/notification-list?limit=${limit}&pageNo=${pageNo}&fromDate=${
+      dateFilter[0] || ""
+    }&toDate=${dateFilter[1] || ""}`,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+};
 
 const Notification = () => {
+  const { user } = useContext(AuthContext);
+  const [pageNo, setPageNo] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [dateFilter, setDateFilter] = useState([]);
+
+  const { data: notifications } = useQuery({
+    queryKey: ["notification", pageNo, limit, dateFilter],
+    queryFn: () => fetchNotifications(user.token, limit, pageNo, dateFilter),
+  });
+
+  console.log(notifications?.data);
+
+  const handlePageChange = (value) => {
+    setPageNo(value);
+  };
+
+  const handleLimitChange = (value) => {
+    setLimit(value);
+  };
+
+  const handleDateFilter = (_, value) => {
+    setDateFilter(value);
+  };
+
   return (
     <div>
       <div className="text-2xl font-semibold mb-4">Notification</div>
@@ -13,6 +54,7 @@ const Notification = () => {
           <Select
             showSearch
             optionFilterProp="label"
+            onChange={handleLimitChange}
             options={[
               {
                 value: "10",
@@ -33,84 +75,36 @@ const Notification = () => {
             ]}
             defaultValue={"10"}
           />
-          <span>of 29</span>
+          <span>of {notifications?.data.totalLength}</span>
         </div>
         <div>
-          <RangePicker />
+          <RangePicker onChange={handleDateFilter} />
         </div>
       </div>
 
       <div className="my-5">
-        <div className="mb-3 w-4/5 bg-white p-5 mx-auto flex items-center justify-between">
-          <div className="flex justify-between items-center">
-            <div className="flex">
-              <Avatar className="mr-2" />
-              <div>
-                <div className="flex gap-2 items-center">
-                  <span className="font-semibold text-md">Md Nasiv</span>
-                  <span className="text-xs">7 minutes ago</span>
-                </div>
-                <div className="text-[#fc8e28] font-semibold">
-                  The order has been created
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <span>3:57 PM</span>
-            <Badge color="gray" dot />
-            <span>2 Sep, 2024</span>
-          </div>
-        </div>
-        <div className="mb-3 w-4/5 bg-white p-5 mx-auto flex items-center justify-between">
-          <div className="flex justify-between items-center">
-            <div className="flex">
-              <Avatar className="mr-2" />
-              <div>
-                <div className="flex gap-2 items-center">
-                  <span className="font-semibold text-md">Md Nasiv</span>
-                  <span className="text-xs">7 minutes ago</span>
-                </div>
-                <div className="text-[#fc8e28] font-semibold">
-                  The order has been created
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <span>3:57 PM</span>
-            <Badge color="gray" dot />
-            <span>2 Sep, 2024</span>
-          </div>
-        </div>
-        <div className="mb-3 w-4/5 bg-white p-5 mx-auto flex items-center justify-between">
-          <div className="flex justify-between items-center">
-            <div className="flex">
-              <Avatar className="mr-2" />
-              <div>
-                <div className="flex gap-2 items-center">
-                  <span className="font-semibold text-md">Md Nasiv</span>
-                  <span className="text-xs">7 minutes ago</span>
-                </div>
-                <div className="text-[#fc8e28] font-semibold">
-                  The order has been created
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <span>3:57 PM</span>
-            <Badge color="gray" dot />
-            <span>2 Sep, 2024</span>
-          </div>
-        </div>
+        {notifications?.data.notifications.map((notification) => (
+          <NotificationCard
+            key={notification._id}
+            notification={notification}
+          />
+        ))}
       </div>
 
       {/* notifications */}
       <div className="flex justify-between">
-        <div>Showing 1 of 3 Pages</div>
         <div>
-          <Pagination defaultCurrent={1} total={30} />
+          Showing {pageNo} of{" "}
+          {Math.ceil(notifications?.data.totalLength / limit)} Pages
+        </div>
+        <div>
+          <Pagination
+            defaultCurrent={1}
+            total={notifications?.data.totalLength}
+            onChange={handlePageChange}
+            pageSize={limit}
+            showSizeChanger={false}
+          />
         </div>
       </div>
     </div>
