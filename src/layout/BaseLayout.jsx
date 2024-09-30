@@ -11,6 +11,7 @@ import {
   faGear,
   faMessage,
   faTableCellsLarge,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const { Header, Sider, Content } = Layout;
@@ -91,6 +92,9 @@ const BaseLayout = () => {
   const [collapsed, setCollapsed] = useState(window.innerWidth < 1250);
   const [open, setOpen] = useState(false);
   // const [language, setLanguage] = useState("eng");
+  const { user } = useContext(AuthContext);
+
+  // console.log();
 
   const {
     token: { colorBgContainer },
@@ -145,12 +149,12 @@ const BaseLayout = () => {
             items={sidebarItems}
             className={collapsed ? "p-2" : "p-6"}
           />
-          {/* <div
+          <div
             style={{
               position: "fixed",
               display: "flex",
               alignItems: "end",
-              bottom: 0,
+              bottom: -10,
               padding: "1.5rem",
             }}
           >
@@ -159,10 +163,10 @@ const BaseLayout = () => {
             ) : (
               <div className="flex flex-col gap-1">
                 <span className="text-xs">Powered by</span>
-                <img src={BSRM_Logo} className="w-20" alt="BSRM Logo" />
+                <img src={BSRM_Logo} className="w-16" alt="BSRM Logo" />
               </div>
             )}
-          </div> */}
+          </div>
         </Sider>
         <Drawer
           width={310}
@@ -209,7 +213,7 @@ const BaseLayout = () => {
               style={{
                 fontSize: "1.3rem",
               }}
-              className="hidden sm:block"
+              className="hidden sm:flex items-center"
             />
             <Button
               type="text"
@@ -256,6 +260,7 @@ const BaseLayout = () => {
               </Dropdown>
 
               <Dropdown
+                trigger={"click"}
                 menu={{
                   items: [
                     {
@@ -272,7 +277,15 @@ const BaseLayout = () => {
                 className="cursor-pointer"
                 arrow
               >
-                <Avatar size="large" icon="R" alt="Rohman" />
+                <div className="flex gap-2 items-center">
+                  <Avatar
+                    size="large"
+                    icon={<FontAwesomeIcon icon={faUser} />}
+                  />
+                  <div className="text-lg font-semibold">
+                    {user.user.ownerName}
+                  </div>
+                </div>
               </Dropdown>
             </div>
           </Header>
