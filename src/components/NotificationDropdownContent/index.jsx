@@ -1,5 +1,5 @@
 import { Avatar } from "antd";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../api";
 import { AuthContext } from "../../providers/AuthProvider";
@@ -51,7 +51,7 @@ const NotificationDropdownContent = () => {
         </div>
       </div>
 
-      <div className="text-center font-semibold text-lg mt-0 h-60 overflow-auto">
+      <div className="text-center font-semibold text-lg mt-0 min-h-60 h-60 overflow-auto">
         {latestNotifications?.data.notifications.map((notification) => (
           <NotificationCard
             key={notification._id}

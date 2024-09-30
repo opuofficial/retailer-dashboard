@@ -10,7 +10,7 @@ import { AuthContext } from "../../providers/AuthProvider";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
-  const [email, setEmail] = useState("topon@gmail.com");
+  const [email, setEmail] = useState("omar@gmail.com");
   const [password, setPassword] = useState("12345678");
   const { user, setUser, isLoading } = useContext(AuthContext);
 
