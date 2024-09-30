@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { Button, Drawer, Layout, Menu, theme } from "antd";
+import { Button, Drawer, Layout, Menu, theme, Space } from "antd";
 import {
   faBars,
   faBarsStaggered,
@@ -20,6 +20,7 @@ import BSRM_Logo from "../assets/BSRM_Logo.svg";
 import BSRM_Icon from "../assets/bsrm_icon.svg";
 import { Dropdown, Avatar } from "antd";
 import { AuthContext } from "../providers/AuthProvider";
+import NotificationDropdownContent from "../components/NotificationDropdownContent";
 
 const sidebarItems = [
   {
@@ -89,34 +90,13 @@ const sidebarItems = [
 const BaseLayout = () => {
   const [collapsed, setCollapsed] = useState(window.innerWidth < 1250);
   const [open, setOpen] = useState(false);
-  const [language, setLanguage] = useState("eng");
-  const [showNotification, setShowNotification] = useState(false);
-  const notificationBoxRef = useRef();
+  // const [language, setLanguage] = useState("eng");
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
   const { logoutUser } = useContext(AuthContext);
-
-  const handleNotificationIconClick = () => {
-    setShowNotification(!showNotification);
-  };
-
-  useEffect(() => {
-    const handleOutsideClick = (e) => {
-      if (
-        showNotification &&
-        notificationBoxRef.current &&
-        !notificationBoxRef.current.contains(e.target)
-      ) {
-        setShowNotification(false);
-      }
-    };
-
-    window.addEventListener("click", handleOutsideClick);
-
-    return () => window.removeEventListener("click", handleOutsideClick);
-  }, [showNotification]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -124,7 +104,7 @@ const BaseLayout = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize();
+    // handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -243,7 +223,7 @@ const BaseLayout = () => {
 
             {/* Language Button Group */}
             <div className="pr-0 flex items-center gap-6">
-              <div className="cursor-pointer border-2 border-solid border-primary flex rounded-full overflow-hidden">
+              {/* <div className="cursor-pointer border-2 border-solid border-primary flex rounded-full overflow-hidden">
                 <Button
                   style={{ borderRadius: 0, border: 0, fontWeight: "bold" }}
                   className={language == "bn" ? "bg-primary text-white" : ""}
@@ -258,30 +238,22 @@ const BaseLayout = () => {
                 >
                   Eng
                 </Button>
-              </div>
+              </div> */}
 
               {/* Notification section */}
-              <div className="relative pt-2" ref={notificationBoxRef}>
-                <FontAwesomeIcon
-                  className="text-xl cursor-pointer"
-                  icon={faBell}
-                  onClick={handleNotificationIconClick}
-                />
-                <div
-                  className={`h-36 w-56 absolute z-10 bg-white shadow top-[100%] right-0 p-3 ${
-                    !showNotification ? "hidden" : ""
-                  }`}
-                >
-                  <div className="flex justify-between text-xs pb-3 border-b">
-                    <div>Notifications</div>
-                    <div>View All</div>
-                  </div>
-
-                  <div className="text-center font-semibold text-lg mt-5">
-                    No Data
-                  </div>
-                </div>
-              </div>
+              <Dropdown
+                dropdownRender={() => <NotificationDropdownContent />}
+                trigger={["click"]}
+              >
+                <a onClick={(e) => e.preventDefault()}>
+                  <Space>
+                    <FontAwesomeIcon
+                      className="text-xl cursor-pointer"
+                      icon={faBell}
+                    />
+                  </Space>
+                </a>
+              </Dropdown>
 
               <Dropdown
                 menu={{
