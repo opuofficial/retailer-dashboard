@@ -3,7 +3,7 @@ const { RangePicker } = DatePicker;
 
 import React, { useContext, useState } from "react";
 import api from "../../api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { AuthContext } from "../../providers/AuthProvider";
 import NotificationCard from "../../components/NotificationCard";
 
@@ -29,6 +29,7 @@ const Notification = () => {
   const { data: notifications } = useQuery({
     queryKey: ["notification", pageNo, limit, dateFilter],
     queryFn: () => fetchNotifications(user.token, limit, pageNo, dateFilter),
+    placeholderData: keepPreviousData,
   });
 
   console.log(notifications?.data);

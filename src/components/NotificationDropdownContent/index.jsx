@@ -40,7 +40,6 @@ const NotificationDropdownContent = () => {
   const { data: latestNotifications, isLoading } = useQuery({
     queryKey: ["latest-notifications"],
     queryFn: () => fetchLatestNotifications(user.token),
-    keepPreviousData: true,
   });
 
   return (
