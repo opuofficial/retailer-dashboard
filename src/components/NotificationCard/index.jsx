@@ -13,7 +13,7 @@ const NotificationCard = ({ notification }) => {
         <div className="flex">
           <Avatar
             className="mr-2"
-            src={`https://sgp1.digitaloceanspaces.com/staging-ihbbsrmbackend/${notification.customerId.image}`}
+            src={`https://sgp1.digitaloceanspaces.com/staging-ihbbsrmbackend/${notification.customerId?.image}`}
           />
           <div>
             <div className="flex gap-2 items-center">

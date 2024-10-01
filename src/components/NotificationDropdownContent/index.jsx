@@ -1,4 +1,4 @@
-import { Avatar } from "antd";
+import { Avatar, Spin } from "antd";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../api";
@@ -22,7 +22,7 @@ const NotificationCard = ({ notification }) => {
       <div className="flex">
         <div>
           <Avatar
-            src={`https://sgp1.digitaloceanspaces.com/staging-ihbbsrmbackend/${notification.customerId.image}`}
+            src={`https://sgp1.digitaloceanspaces.com/staging-ihbbsrmbackend/${notification?.customerId?.image}`}
           />
         </div>
         <div className="text-sm text-left ml-2">
@@ -37,9 +37,10 @@ const NotificationCard = ({ notification }) => {
 const NotificationDropdownContent = () => {
   const { user } = useContext(AuthContext);
 
-  const { data: latestNotifications } = useQuery({
+  const { data: latestNotifications, isLoading } = useQuery({
     queryKey: ["latest-notifications"],
     queryFn: () => fetchLatestNotifications(user.token),
+    keepPreviousData: true,
   });
 
   return (
@@ -50,6 +51,11 @@ const NotificationDropdownContent = () => {
           <Link to="/retailer/notification">View All</Link>
         </div>
       </div>
+      {isLoading && (
+        <div className="flex justify-center mt-5">
+          <Spin />
+        </div>
+      )}
 
       <div className="text-center font-semibold text-lg mt-0 min-h-60 h-60 overflow-auto">
         {latestNotifications?.data.notifications.map((notification) => (
